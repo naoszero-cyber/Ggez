@@ -6,7 +6,7 @@ shotgun:{n:'SHOTGUN',dmg:20,rate:.8,mag:6,res:18,rl:1.6,sp:.28,spd:640,pel:7,rng
 rifle:{n:'ASSAULT RIFLE',dmg:24,rate:.1,mag:30,res:120,rl:1.5,sp:.05,spd:820,pel:1,rng:700,snd:'rifle',gl:17,rc:.07},
 // Melee / scene weapons: occupy a Q slot. Space strikes (dmg, cd=cooldown, sw=swing time, reach px, arc=half-angle, nz=noise radius).
 // Fire slashes. Only the knife can also be thrown (thd dmg, ths speed, thr range): hold fire to aim, release to throw, and it is lost.
-// Knives (DIO's weapon, slot 1, unlimited): LMB held = a volley of 3 knives thrown in an inverted umbrella cone that all converge on the aim point.
+// Knives (DIO's weapon, slot 1, limited stock that regrows, see KN in js/timestop.js): LMB held = a volley of 3 knives thrown in an inverted umbrella cone that all converge on the aim point.
 // dmg per knife, rate = seconds between volleys, spd/rng = knife speed and range, spr = sideways offset of the outer knives at the muzzle (px),
 // fd = aim distance used when there is no mouse point (touch) and no enemy to lock on, tr/ta = touch lock-on range (px) and half-angle (rad), fmin = nearest allowed aim point, nz = noise radius.
 knives:{n:'KNIVES',kn:1,dmg:34,rate:.2,spd:620,rng:560,spr:30,fd:260,tr:350,ta:.35,fmin:60,nz:100,mag:0,res:0,gl:0},

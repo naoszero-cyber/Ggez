@@ -6,7 +6,7 @@ const SAND={slow:.05,haste:1.5};
 const SDX={in:.4,min:.2,out:.6};
 // Cyberpsycho: the gauge (p.cy, 0..1) fills in CY.fill seconds of Sandevistan use and drains over CY.drain seconds otherwise. When full, Sandevistan is forced off and the player goes psycho (no control, auto-chases and attacks the nearest enemy, loses CY.bleed HP/s only while the ghost copies are visible) until the gauge is empty.
 // floor = fraction of max HP (100) that the psycho bleed never takes you below (other damage still can).
-const CY={fill:10,drain:15,bleed:2,floor:.25};
+const CY={fill:8,drain:13,bleed:2,floor:.25};
 // Cyberpsycho reflexes: near = enemy distance that auto-triggers Sandevistan, look/lane = bullet scan range / miss distance (px), chance = dodge chance per incoming bullet, step = sidestep time (s), blast = distance from a barrel blast (px; the blast radius is 96) inside which it runs away, bdash = distance inside which it also dashes.
 const CYA={near:200,look:180,lane:16,chance:.5,step:.25,blast:116,bdash:60};
 // Cyberpsycho ghosts: n copies, spread = max offset (px), alpha, hold = ms before they jump to new spots. Timing: first burst lasts on0 s, then gaps of offMin..offMax s alternate with bursts of onMin..onMax s.

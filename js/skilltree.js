@@ -45,11 +45,11 @@ const SKILLS=[
 {id:'e4b',n:'LAUNCHER LOADER',d:'Grenade Launcher: shots 15% faster, reload 20% faster',c:500,req:['e3']}]},
 {id:'gho',n:'GHOST SKILL',ch:0,nodes:[
 {id:'s1',n:'HEAT SINK',d:'Cyberpsycho builds 20% slower',c:300,req:[]},
-{id:'s2a',n:'COOLANT',d:'Cyberpsycho drains faster (15s to 10s)',c:600,req:['s1']},
+{id:'s2a',n:'COOLANT',d:'Cyberpsycho drains faster (13s to 9s)',c:600,req:['s1']},
 {id:'s2b',n:'OVERCLOCK',d:'Sandevistan run speed x1.5 to x1.65',c:600,req:['s1']},
 {id:'s3',n:'STASIS',d:'World slows to 3% in Sandevistan (was 5%)',c:800,req:['s2a','s2b'],any:1}]},
 {id:'dio',n:'DIO SKILL',ch:1,nodes:[
-{id:'d1',n:'CAPACITOR',d:'Time stop energy 10s to 12s',c:300,req:[]},
+{id:'d1',n:'CAPACITOR',d:'Time stop energy 5s to 7s',c:300,req:[]},
 {id:'d2a',n:'REGEN',d:'Energy regen +30%',c:500,req:['d1']},
 {id:'d2b',n:'QUICK START',d:'Time stop needs 0.5s of energy (was 1s)',c:400,req:['d1']},
 {id:'d3',n:'STAND POWER',d:'Knife damage +20%',c:1000,req:['d2a','d2b'],any:1}]}];
@@ -93,11 +93,11 @@ else if(W.gr){if(o('e2b'))W.mag+=2}
 else if(W.rk){if(o('e2b'))W.res+=2}
 else{if(o('g1'))W.sp*=.8;if(o('g3'))W.res=Math.round(W.res*1.4)}}
 grpApply(o);
-if(ch===0){if(o('s1'))CY.fill=12;if(o('s2a'))CY.drain=10;if(o('s2b'))SAND.haste=1.65;if(o('s3'))SAND.slow=.03}
-if(ch===1){if(o('d1'))TSC.max=12;if(o('d2a'))TSC.regen=.65;if(o('d2b'))TSC.min=.5}
+if(ch===0){if(o('s1'))CY.fill=9.6;if(o('s2a'))CY.drain=9;if(o('s2b'))SAND.haste=1.65;if(o('s3'))SAND.slow=.03}
+if(ch===1){if(o('d1'))TSC.max=7;if(o('d2a'))TSC.regen=.78;if(o('d2b'))TSC.min=.5}
 this.fxSpd=o('b2a')?1.08:1;this.fxDcd=o('b2b')?.8:1;this.fxTaken=o('b3')?.85:1;
 this.exFx={R:Math.round(96*(o('e1')?1.15:1)),dm:o('e2a')?1.2:1,sf:o('e3')?.5:1};
-p.mhp=100+(o('b1')?20:0);p.hp=p.mhp;p.tm=TSC.max;
+p.mhp=100+(o('b1')?20:0);p.hp=p.mhp;p.tm=TSC.max;p.kn=KN.max;p.knt=0;
 const lo=LOADOUT.find(w=>w.id===Save.d.lo);if(lo&&loOpen(lo)&&!p.ws.some(q=>q.id===lo.id)){const W=WEAP[lo.id];p.ws.push({id:lo.id,mag:0,res:0})}
 for(const q of p.ws){const W=WEAP[q.id];if(!W.melee&&!W.kn){q.mag=W.mag;q.res=W.res}}}});
 // ---- hooks
@@ -160,8 +160,8 @@ Object.assign(I18N.th,{"SKILL TREE":"ต้นไม้ทักษะ","LOADOUT
 "STEADY HANDS":"มือนิ่ง","Gun spread -20%":"กระสุนกระจายน้อยลง 20%","HEAVY ROUNDS":"กระสุนหนัก","Gun damage +12%":"ดาเมจปืน +12%","EXTENDED MAGS":"ซองกระสุนใหญ่","Magazine size +25%":"ซองกระสุน +25%","AMMO CACHE":"คลังกระสุน","Reserve ammo +40%":"กระสุนสำรอง +40%",
 "SHARPENED":"ลับคม","Melee damage +15%":"ดาเมจประชิด +15%","LONG REACH":"เอื้อมไกล","Melee reach +15%":"ระยะประชิด +15%","FAST HANDS":"มือไว","Melee cooldown -20%":"ฟันเร็วขึ้น 20%","SILENT STEPS":"ย่องเงียบ","Melee noise -50%":"เสียงประชิดเบาลง 50%",
 "BIGGER CHARGE":"ประจุใหญ่ขึ้น","Blast radius +15%":"รัศมีระเบิด +15%","PAYLOAD":"หัวรบ","Blast damage +20%":"ดาเมจระเบิด +20%","BANDOLIER":"สายคาดกระสุน","+2 grenades per pickup, +2 rocket reserve":"ระเบิดมือ +2 ลูกต่อที่เก็บ จรวดสำรอง +2","SAFE DISTANCE":"ระยะปลอดภัย","Own blasts hurt you 50% less":"ระเบิดของตัวเองทำร้ายน้อยลง 50%",
-"HEAT SINK":"ตัวระบายความร้อน","Cyberpsycho builds 20% slower":"ไซเบอร์ไซโคสะสมช้าลง 20%","COOLANT":"สารหล่อเย็น","Cyberpsycho drains faster (15s to 10s)":"ไซเบอร์ไซโคลดเร็วขึ้น (15 เหลือ 10 วิ)","OVERCLOCK":"โอเวอร์คล็อก","Sandevistan run speed x1.5 to x1.65":"วิ่งตอนใช้ Sandevistan x1.5 เป็น x1.65","STASIS":"หยุดนิ่ง","World slows to 3% in Sandevistan (was 5%)":"โลกช้าลงเหลือ 3% ใน Sandevistan (เดิม 5%)",
-"CAPACITOR":"ตัวเก็บประจุ","Time stop energy 10s to 12s":"พลังหยุดเวลา 10 เป็น 12 วิ","REGEN":"ฟื้นพลัง","Energy regen +30%":"ฟื้นพลังเร็ว +30%","QUICK START":"เริ่มไว","Time stop needs 0.5s of energy (was 1s)":"หยุดเวลาได้ที่พลัง 0.5 วิ (เดิม 1 วิ)","STAND POWER":"พลังสแตนด์","Knife damage +20%":"ดาเมจมีดปา +20%"});
+"HEAT SINK":"ตัวระบายความร้อน","Cyberpsycho builds 20% slower":"ไซเบอร์ไซโคสะสมช้าลง 20%","COOLANT":"สารหล่อเย็น","Cyberpsycho drains faster (13s to 9s)":"ไซเบอร์ไซโคลดเร็วขึ้น (13 เหลือ 9 วิ)","OVERCLOCK":"โอเวอร์คล็อก","Sandevistan run speed x1.5 to x1.65":"วิ่งตอนใช้ Sandevistan x1.5 เป็น x1.65","STASIS":"หยุดนิ่ง","World slows to 3% in Sandevistan (was 5%)":"โลกช้าลงเหลือ 3% ใน Sandevistan (เดิม 5%)",
+"CAPACITOR":"ตัวเก็บประจุ","Time stop energy 5s to 7s":"พลังหยุดเวลา 5 เป็น 7 วิ","REGEN":"ฟื้นพลัง","Energy regen +30%":"ฟื้นพลังเร็ว +30%","QUICK START":"เริ่มไว","Time stop needs 0.5s of energy (was 1s)":"หยุดเวลาได้ที่พลัง 0.5 วิ (เดิม 1 วิ)","STAND POWER":"พลังสแตนด์","Knife damage +20%":"ดาเมจมีดปา +20%"});
 // Strings for the weapon group nodes and the reset warning.
 Object.assign(I18N.th,{"SHORT GUNS":"ปืนสั้น","LONG GUNS":"ปืนยาว","HEAVY GUNS":"ปืนหนัก","LOCKED":"ล็อก","This erases best scores, unlocks and upgrades.":"จะลบคะแนนสูงสุด ภารกิจที่ปลดล็อก และการอัพเกรดทั้งหมด",
 "HOLLOW POINT":"หัวกระสุนแตก","Short guns damage +20%":"ดาเมจปืนสั้น +20%","EXTENDED CLIPS":"ซองต่อขยาย","Short guns magazine +40%":"ซองกระสุนปืนสั้น +40%","FAST DRAW":"ชักไว","Short guns: shots 15% faster, reload 20% faster":"ปืนสั้นยิงถี่ขึ้น 15% รีโหลดเร็วขึ้น 20%","PENETRATOR":"ทะลวง","Short gun bullets pass through +1 enemy":"กระสุนปืนสั้นทะลุศัตรูเพิ่ม 1 ตัว",

@@ -8,7 +8,9 @@
 const tsSm=(a,b,x)=>{x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x)};
 // THE WORLD tunables (seconds). max = meter size and the longest single stop, regen = meter gained per second while time is running,
 // min = meter needed to start a stop, fx = length of the activation effect.
-const TSC={max:10,regen:.5,min:1,fx:1.5};
+const TSC={max:5,regen:.6,min:1,fx:1.5};
+// DIO's throwing knives are limited: p.kn knives in stock (max = starting and highest stock), a batch of 3 knives grows back every sec seconds in real time (also while time is stopped; the timer only runs while the stock is below max and starts over when it is full). A volley throws 3 knives, or whatever is left (1 or 2).
+const KN={max:6,batch:3,sec:4.5};
 // Activation colour stages (u = where the stage starts): [u, 'colour'-blend tint, its alpha, 'overlay' tint, its alpha]. Uneven lengths and hard cuts like the anime cut:
 // lavender-blue, a very short pink pop, long violet, green, yellow; the last stage is the glowing sphere that collapses into DIO.
 const TSN=[[.04,'#7a6cff',.7,'#3a2cff',.5],[.21,'#ff3fa0',.85,'#ff2a6a',.6],[.24,'#a46bff',.7,'#5a1cc8',.55],[.49,'#f0ff70',.6,'#00c840',.6],[.6,'#f4e45a',.7,'#b89a00',.4],[.79,'#ffe650',.8,'#ffd23c',.4]];
@@ -16,7 +18,7 @@ Object.assign(G,{
 wt:0,tsOn:false,tsv:0,tsi:0,tst:0,tsax:0,tsay:0,
 tsc(){const p=this.p;return!p?1:((p.ts>0||this.rwOn())&&this.state==='play')?0:p.sd>0?SAND.slow:1},
 // Per-frame meter logic (player update, real dt).
-updTs(dt){const p=this.p;if(!p.dio)return;if(p.ts>0){if(this.tsOn&&this.tsi<=0)p.tm-=dt;if(p.tm<=0){p.tm=0;p.ts=0}}else p.tm=Math.min(TSC.max,p.tm+dt*TSC.regen)},
+updTs(dt){const p=this.p;if(!p.dio)return;if(p.kn<KN.max){p.knt=(p.knt||0)+dt;if(p.knt>=KN.sec){p.knt=0;p.kn=Math.min(KN.max,p.kn+KN.batch)}}else p.knt=0;if(p.ts>0){if(this.tsOn&&this.tsi<=0)p.tm-=dt;if(p.tm<=0){p.tm=0;p.ts=0}}else p.tm=Math.min(TSC.max,p.tm+dt*TSC.regen)},
 // F pressed: cancel if stopped, otherwise start when the meter allows.
 tsKey(){const p=this.p;if(p.ts>0)p.ts=0;else if(p.tm>=TSC.min)p.ts=1},
 // Barrels destroyed while time was stopped (q.pend) explode as soon as time runs again.

@@ -35,16 +35,16 @@ else if(p.tk){const cx=p.tkx||(p.tks&&I.st.r);p.tk=0;p.tkx=0;if(!cx&&p.cd<=0)thi
 else{p.tk=0;p.tkx=0}
 if(this.ex&&this.en.every(e=>e.dead)&&Math.hypot(this.ex.x-p.x,this.ex.y-p.y)<22)this.complete()},
 // DIO: starting kit (Knives in slot 1, pistol in slot 2; Q swaps).
-dioInit(p){p.dio=1;p.ws=[{id:'knives',mag:0,res:0},{id:'pistol',mag:12,res:48}];p.wi=0},
+dioInit(p){p.dio=1;p.kn=KN.max;p.knt=0;p.ws=[{id:'knives',mag:0,res:0},{id:'pistol',mag:12,res:48}];p.wi=0},
 // Knives: one volley = 3 knives in an inverted umbrella cone. They leave the muzzle spread out sideways (spr px apart) and each aims at the same focus point
-// (the mouse point; with touch aiming the nearest living enemy within ta rad of the aim direction, tr px and in line of sight, otherwise fd px ahead), so the three paths close up into a point. Unlimited ammo. While time is stopped they hang in the air (see HV).
+// (the mouse point; with touch aiming the nearest living enemy within ta rad of the aim direction, tr px and in line of sight, otherwise fd px ahead), so the three paths close up into a point. Limited stock (KN in js/timestop.js, grows back over time). While time is stopped they hang in the air (see HV).
 knives(W,av){const p=this.p,I=Input,ca=Math.cos(p.a),sa=Math.sin(p.a);let fx,fy;
 if(av||I.touch||p.cyp){fx=p.x+ca*W.fd;fy=p.y+sa*W.fd;let bd=W.tr;for(const e of this.en)if(!e.dead){const d=Math.hypot(e.x-p.x,e.y-p.y);if(d<bd&&Math.abs(adiff(Math.atan2(e.y-p.y,e.x-p.x),p.a))<W.ta&&los(p.x,p.y,e.x,e.y)){bd=d;fx=e.x;fy=e.y}}}else{fx=(I.mx-this.cv.width/2)/this.s+this.cam.x;fy=(I.my-this.cv.height/2)/this.s+this.cam.y}
 const fd=(fx-p.x)*ca+(fy-p.y)*sa;if(fd<W.fmin){fx+=ca*(W.fmin-fd);fy+=sa*(W.fmin-fd)}
-p.cd=W.rate;let n=0;
-for(let i=-1;i<=1;i++){let sx=p.x+ca*20-sa*i*W.spr,sy=p.y+sa*20+ca*i*W.spr;if(i&&(solid(sx,sy)||!los(p.x,p.y,sx,sy))){sx=p.x+ca*20;sy=p.y+sa*20}
+if(p.kn<1){p.cd=.3;return}p.cd=W.rate;let n=0;
+for(const i of[0,-1,1].slice(0,Math.min(3,Math.floor(p.kn+1e-6)))){let sx=p.x+ca*20-sa*i*W.spr,sy=p.y+sa*20+ca*i*W.spr;if(i&&(solid(sx,sy)||!los(p.x,p.y,sx,sy))){sx=p.x+ca*20;sy=p.y+sa*20}
 const a=Math.atan2(fy-sy,fx-sx),b=this.spawnB(sx,sy,a,W.spd,W.dmg,0,Math.max(W.rng,Math.hypot(fx-sx,fy-sy)+160));if(b){b.th='knife';n++}}
-if(n){this.shots+=n;Snd.play('throw');this.noise(p.x,p.y,W.nz)}},
+if(n){p.kn-=n;this.shots+=n;Snd.play('throw');this.noise(p.x,p.y,W.nz)}},
 // Warning stages (see CYS): stage = number of gauge levels reached while not yet psycho. Runs a burst on/off machine; a new stage starts a burst at once. The renderer turns G.syOn into the ghosts/glitch (cgOn).
 updSym(dt){const p=this.p,S=this.sy||(this.sy={st:0,on:false,t:0,gn:0,gi:0,ph:0});let st=0;if(!p.cyp&&this.state==='play')for(const a of CYS.at)if(p.cy>=a)st++;
 const pv=S.st;S.st=st;if(!st){S.on=false;S.t=0;S.gn=S.gi=S.ph=0;this.syOn=false;return}

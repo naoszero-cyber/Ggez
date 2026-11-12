@@ -150,7 +150,7 @@ const I18N={th:{
 "GHOST": "โกสต์",
 "Sandevistan, pistol": "แซนเดวิสตัน, ปืนพก",
 "The World: time stop, knives (Q = gun)": "เดอะเวิลด์: หยุดเวลา, ปามีด (Q = ปืน)",
-"KNIVES x3 - UNLIMITED": "มีด x3 - ไม่จำกัด",
+"KNIVES": "มีดปา",
 "THE WORLD": "เดอะเวิลด์",
 "TIME STOP": "หยุดเวลา",
 "CHARGING": "กำลังชาร์จ",
