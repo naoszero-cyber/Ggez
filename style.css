@@ -1,0 +1,135 @@
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#05050a;color:#e8f6ff;font-family:"Segoe UI",Roboto,sans-serif;overscroll-behavior:none}
+canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%;touch-action:none}
+#ov{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(3,3,10,.72);overflow:auto;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.pn{width:min(92vw,440px);padding:22px;border:1px solid #00e5ff55;background:#0a0a16ee;box-shadow:0 0 30px #ff2bd633,inset 0 0 20px #00e5ff14;text-align:center}
+h1{margin:0 0 4px;letter-spacing:.3em;font-size:28px;color:#00e5ff;text-shadow:0 0 14px #00e5ff,3px 0 #ff2bd6}
+h2{margin:0 0 10px;letter-spacing:.2em;color:#ff2bd6}
+p{color:#9fb4c8;font-size:14px;line-height:1.5}
+.pn select{background:#11112a;color:#e8f6ff;border:1px solid #00e5ff88;padding:6px 8px;font:inherit}
+.pn button{display:block;width:100%;margin:8px 0;padding:12px;font:600 15px inherit;letter-spacing:.12em;color:#e8f6ff;background:#11112a;border:1px solid #00e5ff88;cursor:pointer}
+.pn button:focus-visible{background:#00e5ff;color:#001018;outline:none;box-shadow:0 0 16px #00e5ff}
+.pn button:disabled{opacity:.35;cursor:not-allowed;background:#11112a;color:#789;box-shadow:none}
+.pn label{display:flex;justify-content:space-between;align-items:center;margin:9px 0;font-size:14px}
+.pn input[type=range]{width:55%}table{width:100%;font-size:14px;margin:8px 0}td{padding:3px;text-align:left}td+td{text-align:right;color:#00e5ff}
+.rank{font-size:56px;font-weight:800;color:#ffb300;text-shadow:0 0 18px #ffb300}
+#pb{position:fixed;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));width:44px;height:44px;background:#0a0a16cc;color:#00e5ff;border:1px solid #00e5ff88;font-weight:800;display:none;z-index:3}
+
+body.playing #pb{display:block}
+
+body.playing canvas{cursor:crosshair}
+html[lang="th"] .pn h2,html[lang="th"] .pn button{letter-spacing:.02em}
+html[lang="th"] p{line-height:1.7}
+
+.pn.sk{max-height:90vh;overflow-y:auto}.pn.sk h3{margin:14px 0 4px;color:#ff2bd6;font-size:15px;letter-spacing:.12em}.pn button small{display:block;margin-top:3px;font:400 12px inherit;letter-spacing:0;opacity:.85}
+/* Skill tree graph (js/skilltree.js UI.tree) */
+.pn.skx{width:min(96vw,1100px)}
+.skw{overflow-x:auto}
+.skg{position:relative;min-width:1000px;aspect-ratio:1/1;margin:6px 0}
+.skg svg{position:absolute;inset:0;width:100%;height:100%}
+.pn .skg button.sn{position:absolute;width:4.2%;aspect-ratio:1;min-width:34px;margin:0;padding:0;transform:translate(-50%,-50%);border-radius:50%;border:2px solid var(--c);background:#0a0a16;color:var(--c);font:700 13px inherit;letter-spacing:0;display:flex;align-items:center;justify-content:center}
+.pn .skg button.sn span{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;width:84px;font:600 10px/1.2 inherit;letter-spacing:0;color:#e8f6ff;text-shadow:0 0 3px #000,0 0 3px #000;pointer-events:none}
+.pn .skg button.sn.own{background:var(--c);color:#001018;box-shadow:0 0 12px var(--c)}
+.pn .skg button.sn.can{box-shadow:0 0 12px var(--c);animation:skp 1.4s ease-in-out infinite}
+.pn .skg button.sn.open{opacity:.6}
+.pn .skg button.sn.lock{border-color:#4a4f66;color:#6b7190;opacity:1}
+.pn .skg button.sn.lock span{color:#7c819c}
+.pn .skg button.sn:focus-visible:not(:disabled){background:var(--c);color:#001018}
+
+.skl{position:absolute;transform:translate(-50%,-50%);font:700 12px/1.1 inherit;letter-spacing:.1em;text-align:center;pointer-events:none;text-shadow:0 0 4px #000}
+.skl small{display:block;font-size:10px;letter-spacing:0;opacity:.8}
+.skd{min-height:2.6em;margin:4px 0 8px;font-size:13px;color:#e8f6ff}
+@keyframes skp{50%{box-shadow:0 0 4px var(--c)}}
+@media (prefers-reduced-motion:reduce){.pn .skg button.sn.can{animation:none}}
+
+/* ===== UI/UX refresh: menus, settings, skill tree ===== */
+#ov{padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));-webkit-overflow-scrolling:touch;backdrop-filter:blur(3px)}
+/* margin:auto centres short panels and keeps tall ones scrollable from the top (flex centering used to clip the top). */
+.pn{margin:auto;width:min(100%,440px)}
+h1{font-size:clamp(22px,7.4vw,28px)}
+.pn button{min-height:48px;font-family:inherit;font-size:15px;font-weight:600;transition:background .12s,box-shadow .12s,transform .08s}
+.pn button:not(.sn):active:not(:disabled){transform:scale(.98);background:#00e5ff33}
+.pn button small{font-family:inherit;font-size:12px;font-weight:400;letter-spacing:0}
+@media (hover:hover){.pn button:hover:not(:disabled){background:#00e5ff;color:#001018;box-shadow:0 0 16px #00e5ff}
+.pn .skg button.sn:hover:not(:disabled){background:var(--c);color:#001018}}
+.pn button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.pn button[data-a=reset]{border-color:#ff4d6d99;color:#ff8da0}
+/* settings */
+.pn h3{margin:18px 0 4px;padding-bottom:4px;border-bottom:1px solid #ff2bd655;color:#ff2bd6;font-size:13px;letter-spacing:.16em;text-align:left}
+.pn label{min-height:44px;gap:14px;margin:2px 0;text-align:left;border-bottom:1px solid #00e5ff14}
+.pn label>input[type=range]{flex:0 0 50%;width:50%;height:32px;accent-color:#00e5ff}
+.pn input[type=checkbox]{flex:none;width:24px;height:24px;accent-color:#00e5ff}
+.pn select{min-height:40px;max-width:55%}
+@media (pointer:coarse){.pn label>input[type=range]{height:40px}.pn .skg button.sn{min-width:40px}}
+/* short screens (phone landscape) */
+@media (max-height:520px){.pn{padding:12px 16px}h1{font-size:22px}h2{margin-bottom:6px}p{margin:6px 0;font-size:13px;line-height:1.4}.pn button{min-height:42px;margin:5px 0;padding:8px}}
+/* skill tree: fixed header and footer, only the graph scrolls (pan on touch, wheel/scrollbars on desktop) */
+.pn.skx{width:min(100%,1100px);height:min(100%,980px);max-height:none;display:flex;flex-direction:column;overflow:hidden;padding:12px 14px}
+.pn.skx h2{margin:0 0 4px}
+.skh{display:flex;align-items:center;justify-content:space-between;margin:0 0 6px;font-size:14px;color:#9fb4c8}
+.skh b{color:#00e5ff;font-size:18px}
+.pn .zb{display:inline-block;width:44px;min-height:44px;height:44px;margin:0 0 0 8px;padding:0;font-size:22px;line-height:1;letter-spacing:0}
+.skw{flex:1;min-height:0;overflow:auto;touch-action:pan-x pan-y;overscroll-behavior:contain;border:1px solid #00e5ff22;background:radial-gradient(circle at 50% 50%,#00e5ff0d,transparent 60%)}
+.skg{--s:max(100%,1400px);width:calc(var(--s) * var(--z,1));min-width:0;margin:0 auto;aspect-ratio:1/1}
+@media (pointer:coarse){.skg{--s:max(100%,1800px)}}
+.pn .skg button.sn{min-height:0;font-family:inherit;font-weight:700;font-size:13px;letter-spacing:0}
+.pn .skg button.sn:active:not(:disabled){filter:brightness(1.5)}
+.pn .skg button.sn span{font-family:inherit;font-weight:600;font-size:11px;line-height:1.2;width:96px}
+.skl{font-family:inherit;font-weight:700;font-size:13px;line-height:1.15}
+.skd{flex:none;min-height:3.6em;margin:8px 0 0;padding:8px 10px;border-left:3px solid #00e5ff;background:#00e5ff12;text-align:left;font-size:13px;line-height:1.45}
+.pn.skx>button[data-a=skback]{flex:none;margin:8px 0 0}
+/* skill tree on short screens (phone landscape): title, points and zoom share one row; details and BACK share the bottom row, so the graph gets the height. */
+@media (max-height:520px){
+#ov{padding-top:max(6px,env(safe-area-inset-top));padding-bottom:max(6px,env(safe-area-inset-bottom))}
+.pn.skx{display:grid;grid-template-columns:1fr auto auto;grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"t p z" "g g g" "d d b";gap:6px 10px;align-items:center;padding:8px 12px}
+.pn.skx h2{grid-area:t;margin:0;font-size:16px;text-align:left;letter-spacing:.1em}
+.pn.skx .skh{display:contents}
+.pn.skx .skh>span:first-child{grid-area:p;font-size:13px}
+.pn.skx .skh>span:last-child{grid-area:z}
+.pn .zb{width:40px;min-height:40px;height:40px;margin:0 0 0 6px}
+.pn.skx .skw{grid-area:g;align-self:stretch}
+.pn.skx .skd{grid-area:d;margin:0;min-height:44px;padding:4px 8px;font-size:12px;line-height:1.3;display:flex;align-items:center}
+.pn.skx>button[data-a=skback]{grid-area:b;width:auto;margin:0;min-height:44px;padding:0 28px}
+}
+/* roomier skill tree: bigger canvas, nodes capped so labels no longer collide */
+.pn .skg button.sn{width:min(4.2%,52px)}
+
+/* ===== Touch action buttons: arc around the bottom-right corner (thumb pivot), ranked by use =====
+   Round buttons, 56-72px, hit area padded by 4px. Biggest and closest to the corner: DODGE, then MELEE/RELOAD, then SWAP, USE, SANDE.
+   The aim stick still floats anywhere on the right half; the arc sits on the edge so the aim thumb can tap a button and go straight back. */
+#tc{position:fixed;inset:0;display:none;z-index:2;opacity:.7;pointer-events:none}
+#tc button{--k:#00e5ff;--s:56px;--x:16px;--y:16px;position:absolute;pointer-events:auto;right:calc(var(--x) + env(safe-area-inset-right));bottom:calc(var(--y) + env(safe-area-inset-bottom));width:var(--s);height:var(--s);padding:0;border-radius:50%;font:700 11px/1.05 sans-serif;letter-spacing:0;color:#fff;background:#00e5ff33;background:color-mix(in srgb,var(--k) 24%,#05050a);border:2px solid var(--k);touch-action:none;transition:transform .08s,background .08s,box-shadow .08s}
+#tc button::after{content:"";position:absolute;inset:-4px;border-radius:50%}
+#tc button[data-act=dodge]{--s:72px;--x:16px;--y:16px;font-size:13px}
+#tc button[data-act=melee]{--s:64px;--x:104px;--y:24px;--k:#ff5d73;font-size:12px}
+#tc button[data-act=reload]{--s:64px;--x:24px;--y:104px;--k:#ffd23d;font-size:12px}
+#tc button[data-act=swap]{--s:56px;--x:96px;--y:96px;--k:#b07cff}
+#tc button[data-act=use]{--s:56px;--x:184px;--y:32px;--k:#3dff7a}
+#tc button[data-act=sand]{--s:56px;--x:32px;--y:184px;--k:#ff2bd6}
+#tc button:active{transform:scale(.9);background:var(--k);color:#001018;box-shadow:0 0 16px var(--k)}
+@media (pointer:coarse){body.playing #tc{display:block}}
+/* Portrait phones: tighter arc so it stays in the right half */
+@media (pointer:coarse) and (orientation:portrait){
+#tc button[data-act=dodge]{--s:64px;--x:12px;--y:12px}
+#tc button[data-act=melee]{--s:58px;--x:84px;--y:18px}
+#tc button[data-act=reload]{--s:58px;--x:18px;--y:84px}
+#tc button[data-act=swap]{--s:52px;--x:82px;--y:82px}
+#tc button[data-act=use]{--s:52px;--x:144px;--y:24px}
+#tc button[data-act=sand]{--s:52px;--x:24px;--y:144px}
+}
+/* touch buttons show icons (SVG, colour follows the button) instead of text; names live in aria-label */
+#tc button svg{width:56%;height:56%;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+#tc button[data-act=sand] .w,#tc button[data-act=sand][data-ch="1"] .s{display:none}
+#tc button[data-act=sand][data-ch="1"] .w{display:block}
+/* touch button layout editor */
+body.tcedit #tc{display:block;opacity:1!important}
+body.tcedit #tc button{outline:2px dashed #ffffff88;outline-offset:3px;cursor:grab}
+body.tcedit #tc button.tsel{outline:2px solid #fff}
+body.tcedit #tc button:active{transform:none;box-shadow:none;background:color-mix(in srgb,var(--k) 24%,#05050a);color:#fff}
+#tce{position:fixed;top:max(8px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 12px;width:max-content;max-width:calc(100% - 16px);padding:8px 12px;background:#0a0a16ee;border:1px solid #00e5ff88;font-size:13px;color:#e8f6ff}
+#tce span{flex:1 1 100%;text-align:center;font-size:12px;color:#9fb4c8}
+#tce label{display:flex;align-items:center;gap:8px}
+#tce input[type=range]{width:140px;height:32px;accent-color:#00e5ff}
+#tce button{min-height:40px;padding:0 14px;background:#11112a;color:#e8f6ff;border:1px solid #00e5ff;font-family:inherit;font-size:13px;font-weight:600}
+/* centre the icon inside the round touch buttons (the THE WORLD clock was drifting left because its SVG was display:block) */
+#tc button{display:flex;align-items:center;justify-content:center}
